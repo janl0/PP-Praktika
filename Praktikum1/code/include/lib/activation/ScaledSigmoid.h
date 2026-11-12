@@ -4,8 +4,18 @@
 
 #include <string>
 
+namespace dnn {
 // Sigmoid whose output is linearly rescaled from (0, 1) to (min, max).
-class ScaledSigmoid {
+class ScaledSigmoid : public ActivationFunction {
+public:
+    double activation(double x) {};
+
+public:
+    double activationBackwards(double x) {};
+
+public:
+    std::string getName() {};
+    
 public:
     ScaledSigmoid(double min, double max);
 
@@ -16,3 +26,5 @@ private:
     double min;
     double max;
 };
+
+}
