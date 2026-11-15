@@ -60,6 +60,38 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
     }
 }
 
+void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, const std::vector<double>& previousLayerOutput) {
+    std::vector<double> dPreActivation;
+    for(uint32_t i = 0; i < layerOutputSize; i++) {
+        dPreActivation[i] = dActivationOutput[i] * activationFunction->activationBackwards(preActivationOutput[i]);
+    }
+
+    dWeights.assign(layerOutputSize, std::vector<double>(layerInputSize, 0.0));
+    for(uint32_t i = 0; i < layerOutputSize; i++) {
+        for(uint32_t j = 0; j < layerInputSize; j++) {
+            dWeights[i][j] = dPreActivation[i] * previousLayerOutput[j];
+        }
+    }
+
+    dBias = dPreActivation;
+
+    for(uint32_t i = 0; i < layerOutputSize; i++) {
+        for(uint32_t j = 0; j < layerInputSize; j++) {
+            accumulatedDWeights[i][j] = accumulatedDWeights[i][j] + dWeights[i][j];
+        }
+        accumulatedDBias[i] = accumulatedDBias[i] + dBias[i];
+    }
+
+    numProcessedSamples++;
+
+    dPreviousLayerOutput.assign(layerInputSize, 0.0);
+    for(uint32_t i = 0; i < layerOutputSize; i++) {
+        for(uint32_t j = 0; j < layerInputSize; j++) {
+            dPreviousLayerOutput[j] = weights[i][j] * dPreActivation[j];
+        }
+    }
+}
+
 uint64_t Layer::getId() const {
     return id;
 }
