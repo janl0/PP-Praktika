@@ -5,6 +5,59 @@
 
 namespace dnn {
 
+double dotProduct(const std::vector<double>& a, const std::vector<double>& b) {
+    if (a.size() != a.size()) {
+        throw std::invalid_argument("Argument vectors have to be of the same size.");
+    } 
+    
+    double sum = 0.0;
+    for (std::size_t i = 0; i < a.size(); i += 1) {
+        sum += a[i] * b[i];
+    }
+    return sum;
+}
+
+double sum(const std::vector<double>& values) {
+    auto sum = 0.0;
+    for (const double elem : values) {
+        sum += elem;
+    }
+    return sum;
+}
+
+template<typename T>
+std::vector<double> normalize(const std::vector<T>& values) {
+    if (values.empty()) return {};
+    const auto max = static_cast<double>(*std::max_element(values.begin(), values.end()));
+    
+    std::vector<double> result;
+    result.reserve(values.size());
+
+    for (const T& value : values) {
+        result.push_back(static_cast<double>(value) / max);
+    }
+    
+    return result;
+}
+
+template<typename T>
+std::vector<double> normalize(const std::vector<T>& values, int maxValue) {
+    if (values.empty()) return {};
+    const auto max = static_cast<double>(maxValue);
+
+    std::vector<double> result;
+    result.reserve(values.size());
+
+    for (const T& value : values) {
+        result.push_back(static_cast<double>(value) / max);
+    }
+    
+    return result;
+}
+
+template<typename T>
+std::vector<double> normalize(const std::vector<T>& values, int maxValue);
+
 std::vector<double> encodeAsOneHot(double value, std::size_t numClasses) {
     if (value < 0.0 || value >= static_cast<double>(numClasses)) {
         throw std::out_of_range("encodeAsOneHot: value " + std::to_string(value) + " is out of range for " +
