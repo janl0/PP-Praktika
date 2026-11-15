@@ -92,6 +92,16 @@ void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, co
     }
 }
 
+void Layer::updateParameters(const std::vector<std::vector<double>>& dWeights, const std::vector<double>& dBias, double learningRate) {
+    for(uint32_t i = 0; i < layerOutputSize; i++) {
+        for(uint32_t j = 0; j < layerInputSize; j++) {
+            weights[i][j] = weights[i][j] - learningRate * dWeights[i][j];
+        }
+        bias[i] = bias[i] - learningRate * dBias[i];
+    }
+}
+
+
 uint64_t Layer::getId() const {
     return id;
 }
