@@ -7,7 +7,7 @@ Example: #define AUTHORS_3_A "Tim Heldmann, Lukas Rothenberger"
 */
 
 #define AUTHORS_3_A "Jan Lindauer"
-#define AUTHORS_3_B ""
+#define AUTHORS_3_B "Jasper Macheil"
 
 #define AUTHORS_4_A "Paul Feidieker"
 #define AUTHORS_4_B "Paul Feidieker"
