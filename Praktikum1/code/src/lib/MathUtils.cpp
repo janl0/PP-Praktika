@@ -25,36 +25,6 @@ double sum(const std::vector<double>& values) {
     return sum;
 }
 
-template<typename T>
-std::vector<double> normalize(std::vector<T>& values) {
-    if (values.empty()) return {};
-    const auto max = static_cast<double>(*std::max_element(values.begin(), values.end()));
-    
-    std::vector<double> result;
-    result.reserve(values.size());
-
-    for (const T& value : values) {
-        result.push_back(static_cast<double>(value) / max);
-    }
-    
-    return result;
-}
-
-template<typename T>
-std::vector<double> normalize(std::vector<T>& values, int maxValue) {
-    if (values.empty()) return {};
-    const auto max = static_cast<double>(maxValue);
-
-    std::vector<double> result;
-    result.reserve(values.size());
-
-    for (const T& value : values) {
-        result.push_back(static_cast<double>(value) / max);
-    }
-    
-    return result;
-}
-
 std::vector<double> encodeAsOneHot(double value, std::size_t numClasses) {
     if (value < 0.0 || value >= static_cast<double>(numClasses)) {
         throw std::out_of_range("encodeAsOneHot: value " + std::to_string(value) + " is out of range for " +
