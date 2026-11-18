@@ -20,7 +20,7 @@ double LeakyReLU::activationBackwards(double x) {
 	}
 }
 
-std::string LeakyReLU::getName() {
+std::string LeakyReLU::getName() const {
 	return "leaky_relu";
 }
 

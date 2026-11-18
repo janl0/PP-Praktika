@@ -18,14 +18,14 @@ double ScaledSigmoid::getMax() const {
 }
 
 double ScaledSigmoid::activation(double x) {
-	return min + (max-min) * (1.0 / (1.0 + exp(-x)));
+	return this->min + (this->max-this->min) * (1.0 / (1.0 + exp(-x)));
 }
 
-double caledSigmoid::activationBackwards(double x) {
-	return (max - min) * (1.0 / (1.0 + exp(-x))) * (1 - (1.0 / (1.0 + exp(-x))));
+double ScaledSigmoid::activationBackwards(double x) {
+	return (this->max - this->min) * (1.0 / (1.0 + exp(-x))) * (1 - (1.0 / (1.0 + exp(-x))));
 }
 
-std::string ScaledSigmoid::getName() {
+std::string ScaledSigmoid::getName() const {
 	return "scaled_sigmoid";
 }
 

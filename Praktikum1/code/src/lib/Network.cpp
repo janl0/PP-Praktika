@@ -126,7 +126,7 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
         for (int j = 0; j < inputs.size(); j++) {
             if (j % batchSize == 0 && j != 0) {
                 for (Layer* layer : layers) {
-                    layer->commitToWeights();
+                    layer->commitToWeights(learningRate);
                 }
             }
 
@@ -138,7 +138,7 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
             this->fullBackwardPropagation(this->output, actualOutputs.at(j));
         }
         for (Layer* layer : layers) {
-            layer->commitToWeights();
+            layer->commitToWeights(learningRate);
         }
 
         this->costHistory.push_back(epochCost / inputs.size());

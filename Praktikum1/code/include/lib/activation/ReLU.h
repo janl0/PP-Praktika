@@ -1,6 +1,7 @@
 #pragma once
 
-#include <activation/ActivationFunction.h>
+// #include <activation/ScaledSigmoid.h>
+#include "ActivationFunction.h"
 
 #include <string>
 
@@ -8,13 +9,11 @@ namespace dnn {
 
 class ReLU : public ActivationFunction {
 public:
-    double activation(double x) {};
+    double activation(double x) override;
+    double activationBackwards(double x) override;
 
 public:
-    double activationBackwards(double x) {};
-
-public:
-    std::string getName() {};
+    std::string getName() const override;
 };
 
 }

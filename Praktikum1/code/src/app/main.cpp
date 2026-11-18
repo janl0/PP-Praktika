@@ -9,10 +9,10 @@
 #include <utility>
 #include <vector>
 
-#include "IOUtils.h"
-#include "MathUtils.h"
-#include "activation/ReLU.h"
-#include "activation/Sigmoid.h"
+#include <IOUtils.h>
+#include <MathUtils.h>
+#include <activation/ReLU.h>
+#include <activation/Sigmoid.h>
 
 
 std::pair<std::vector<std::vector<double>>, std::vector<std::vector<double>>> generateSamples(

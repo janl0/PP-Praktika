@@ -26,7 +26,7 @@ double sum(const std::vector<double>& values) {
 }
 
 template<typename T>
-std::vector<double> normalize(const std::vector<T>& values) {
+std::vector<double> normalize(std::vector<T>& values) {
     if (values.empty()) return {};
     const auto max = static_cast<double>(*std::max_element(values.begin(), values.end()));
     
@@ -41,7 +41,7 @@ std::vector<double> normalize(const std::vector<T>& values) {
 }
 
 template<typename T>
-std::vector<double> normalize(const std::vector<T>& values, int maxValue) {
+std::vector<double> normalize(std::vector<T>& values, int maxValue) {
     if (values.empty()) return {};
     const auto max = static_cast<double>(maxValue);
 
@@ -54,9 +54,6 @@ std::vector<double> normalize(const std::vector<T>& values, int maxValue) {
     
     return result;
 }
-
-template<typename T>
-std::vector<double> normalize(const std::vector<T>& values, int maxValue);
 
 std::vector<double> encodeAsOneHot(double value, std::size_t numClasses) {
     if (value < 0.0 || value >= static_cast<double>(numClasses)) {

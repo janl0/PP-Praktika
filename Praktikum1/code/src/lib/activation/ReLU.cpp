@@ -20,7 +20,7 @@ double ReLU::activationBackwards(double x) {
 	}
 }
 
-std::string ReLU::getName() {
+std::string ReLU::getName() const {
 	return "relu";
 }
 
