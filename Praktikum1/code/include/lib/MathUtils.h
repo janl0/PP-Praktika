@@ -40,13 +40,12 @@ std::vector<double> normalize(const std::vector<T>& values) {
 template<typename T>
 std::vector<double> normalize(const std::vector<T>& values, int maxValue) {
     if (values.empty()) return {};
-    const auto max = static_cast<double>(maxValue);
 
     std::vector<double> result;
     result.reserve(values.size());
 
     for (const T& value : values) {
-        result.push_back(static_cast<double>(value) / max);
+        result.push_back(static_cast<double>(value) / static_cast<double>(maxValue));
     }
     
     return result;
