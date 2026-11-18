@@ -2,27 +2,31 @@
 
 #include <cmath>
 
-dnn::ScaledSigmoid::ScaledSigmoid(double min, double max) {
+namespace dnn {
+
+ScaledSigmoid::ScaledSigmoid(double min, double max) {
 	this->min = min;
 	this->max = max;
 }
 
-double dnn::ScaledSigmoid::getMin() const {
+double ScaledSigmoid::getMin() const {
 	return this->min;
 }
 
-double dnn::ScaledSigmoid::getMax() const {
+double ScaledSigmoid::getMax() const {
 	return this->max;
 }
 
-double dnn::ScaledSigmoid::activation(double x) {
+double ScaledSigmoid::activation(double x) {
 	return min + (max-min) * (1.0 / (1.0 + exp(-x)));
 }
 
-double dnn::ScaledSigmoid::activationBackwards(double x) {
+double caledSigmoid::activationBackwards(double x) {
 	return (max - min) * (1.0 / (1.0 + exp(-x))) * (1 - (1.0 / (1.0 + exp(-x))));
 }
 
-std::string dnn::ScaledSigmoid::getName() {
+std::string ScaledSigmoid::getName() {
 	return "scaled_sigmoid";
+}
+
 }

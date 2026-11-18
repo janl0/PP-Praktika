@@ -1,7 +1,9 @@
 #include <activation/ReLU.h>
 
-double dnn::ReLU::activation(double x) {
-	if x > 0 {
+namespace dnn {
+
+double ReLU::activation(double x) {
+	if (x > 0) {
 		return x;
 	}
 	else {
@@ -9,8 +11,8 @@ double dnn::ReLU::activation(double x) {
 	}
 }
 
-double dnn::ReLU::activationBackwards(double x) {
-	if x > 0 {
+double ReLU::activationBackwards(double x) {
+	if (x > 0) {
 		return 1.0;
 	}
 	else {
@@ -18,6 +20,8 @@ double dnn::ReLU::activationBackwards(double x) {
 	}
 }
 
-std::string dnn::ReLU::getName() {
+std::string ReLU::getName() {
 	return "relu";
+}
+
 }

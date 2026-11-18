@@ -1,7 +1,9 @@
 #include <activation/LeakyReLU.h>
 
-double dnn::LeakyReLU::activation(double x) {
-	if x > 0 {
+namespace dnn {
+
+double LeakyReLU::activation(double x) {
+	if (x > 0) {
 		return x;
 	}
 	else {
@@ -9,8 +11,8 @@ double dnn::LeakyReLU::activation(double x) {
 	}
 }
 
-double dnn::LeakyReLU::activationBackwards(double x) {
-	if x > 0 {
+double LeakyReLU::activationBackwards(double x) {
+	if (x > 0) {
 		return 1.0;
 	}
 	else {
@@ -18,6 +20,8 @@ double dnn::LeakyReLU::activationBackwards(double x) {
 	}
 }
 
-std::string dnn::LeakyReLU::getName() {
+std::string LeakyReLU::getName() {
 	return "leaky_relu";
+}
+
 }
