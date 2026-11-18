@@ -50,9 +50,9 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
     preActivationOutput.assign(layerOutputSize, 0.0);
     activationOutput.assign(layerOutputSize, 0.0);
 
-    for(uint32_t i = 0; i < layerOutputSize; i++) {
+    for (size_t i = 0; i < layerOutputSize; i++) {
         double activationSum = bias[i];
-        for(uint32_t j = 0; j < layerOutputSize; j++) {
+        for (size_t j = 0; j < layerInputSize; j++) {
             activationSum += weights[i][j] * previousLayerOutput[j];
         }
         preActivationOutput[i] = activationSum;
@@ -61,7 +61,7 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
 }
 
 void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, const std::vector<double>& previousLayerOutput) {
-    std::vector<double> dPreActivation;
+    std::vector<double> dPreActivation(layerOutputSize);
     for(uint32_t i = 0; i < layerOutputSize; i++) {
         dPreActivation[i] = dActivationOutput[i] * activationFunction->activationBackwards(preActivationOutput[i]);
     }
@@ -85,9 +85,9 @@ void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, co
     numProcessedSamples++;
 
     dPreviousLayerOutput.assign(layerInputSize, 0.0);
-    for(uint32_t i = 0; i < layerOutputSize; i++) {
-        for(uint32_t j = 0; j < layerInputSize; j++) {
-            dPreviousLayerOutput[j] = weights[i][j] * dPreActivation[j];
+    for (size_t i = 0; i < layerOutputSize; i++) {
+        for (size_t j = 0; j < layerInputSize; j++) {
+            dPreviousLayerOutput[j] = weights[i][j] * dPreActivation[i];
         }
     }
 }
@@ -99,6 +99,21 @@ void Layer::updateParameters(const std::vector<std::vector<double>>& dWeights, c
         }
         bias[i] = bias[i] - learningRate * dBias[i];
     }
+}
+
+void Layer::commitToWeights(double learningRate) {
+    for (auto& row : accumulatedDWeights)
+        for (double& value : row)
+            value = value / numProcessedSamples;
+
+    for (double& value : accumulatedDBias)
+        value = value / numProcessedSamples;
+
+    updateParameters(accumulatedDWeights, accumulatedDBias, learningRate);
+
+    accumulatedDWeights.assign(layerOutputSize, std::vector<double>(layerInputSize, 0.0));
+    accumulatedDBias.assign(layerOutputSize, 0.0);
+    numProcessedSamples = 0;
 }
 
 
