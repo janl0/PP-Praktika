@@ -27,7 +27,7 @@ std::vector<double> normalize(const std::vector<T>& values) {
     if (values.empty()) return {};
     const auto max = static_cast<double>(*std::max_element(values.begin(), values.end()));
     
-    return normalize(values, max);
+    return normalize(values, static_cast<int>(max));
 }
 
 template<typename T>
