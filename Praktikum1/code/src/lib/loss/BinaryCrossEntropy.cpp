@@ -66,7 +66,7 @@ std::vector<double> BinaryCrossEntropy::getGradient(const std::vector<double>& p
     for (std::size_t i = 0; i < size; i += 1) {
         const double act = actualOutput[i];
         const double clampedPred = clampProbability(predictedOutput[i]);
-        const double numerator = -act / clampedPred - ((1.0 - act) / (1.0 - clampedPred));
+        const double numerator = -act / clampedPred + ((1.0 - act) / (1.0 - clampedPred));
         vecGrad.push_back(numerator / static_cast<double>(size));
     }
     
