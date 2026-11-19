@@ -86,9 +86,16 @@ void Network::fullForwardPropagation(const std::vector<double>& input) {
     if (layers.size() > 0) {
         output = this->layers.back()->getActivationOutput();
     }
+    else {
+        output = input;
+    }
 }
 
 void Network::fullBackwardPropagation(const std::vector<double>& predictedOutput, const std::vector<double>& actualOutput) {
+    if (this->ownedLossFunction == nullptr) {
+        throw std::logic_error("no loss function");
+    }
+
     std::vector<double> dACurr = this->ownedLossFunction->getGradient(predictedOutput, actualOutput);
 
     for (auto it = this->layers.rbegin(); it != this->layers.rend(); it++) {
