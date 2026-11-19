@@ -9,8 +9,8 @@ Network::Network(std::vector<std::tuple<std::vector<std::vector<double>>, std::v
     this->ownedLossFunction = lossFunction;
 
     for (int i = 0; i < layerParameters.size(); i++) {
-        std::tuple<std::vector<std::vector<double>>, std::vector<double>, ActivationFunction*> layerParameter = layerParameters.at(i);
-        Layer* layer = new Layer(i, 0, std::get<0>(layerParameter).at(0).size(), std::get<1>(layerParameter).size(), std::get<2>(layerParameter));
+        std::tuple<std::vector<std::vector<double>>, std::vector<double>, ActivationFunction*> layerParameter = layerParameters[i];
+        Layer* layer = new Layer(i, 0, std::get<0>(layerParameter)[0].size(), std::get<0>(layerParameter).size(), std::get<2>(layerParameter));
         layer->setParameters(std::get<0>(layerParameter), std::get<1>(layerParameter));
         this->layers.push_back(layer);
     }
@@ -72,7 +72,7 @@ const std::vector<double>& Network::getLayerInput(uint64_t layerId) const {
         return this->initialInput;
     }
     else {
-        return this->layers.at(layerId - 1)->getActivationOutput();
+        return this->layers[layerId - 1]->getActivationOutput();
     }
 }
 
@@ -84,10 +84,10 @@ void Network::fullForwardPropagation(const std::vector<double>& input) {
     }
 
     if (layers.size() > 0) {
-        output = this->layers.back()->getActivationOutput();
+        this->output = this->layers.back()->getActivationOutput();
     }
     else {
-        output = input;
+        this->output = input;
     }
 }
 
@@ -126,6 +126,10 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
         throw std::invalid_argument("batchSize has to be positive");
     }
 
+    for (Layer* layer : layers) {
+        layer->commitToWeights(learningRate);
+    }
+
     this->costHistory.clear();
     this->accuracyHistory.clear();
     for (int i = 0; i < epochs; i++) {
@@ -133,18 +137,18 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
         double epochAccuracy = 0.0;
 
         for (int j = 0; j < inputs.size(); j++) {
-            if (j % batchSize == 0 && j != 0) {
+            this->fullForwardPropagation(inputs[j]);
+
+            epochCost += this->ownedLossFunction->getCostValue(this->output, actualOutputs[j]);
+            epochAccuracy += this->ownedLossFunction->getAccuracyValue(this->output, actualOutputs[j]);
+
+            this->fullBackwardPropagation(this->output, actualOutputs[j]);
+
+            if (j % batchSize == 0) {
                 for (Layer* layer : layers) {
                     layer->commitToWeights(learningRate);
                 }
             }
-
-            this->fullForwardPropagation(inputs.at(j));
-
-            epochCost += this->ownedLossFunction->getCostValue(this->output, actualOutputs.at(j));
-            epochAccuracy += this->ownedLossFunction->getAccuracyValue(this->output, actualOutputs.at(j));
-
-            this->fullBackwardPropagation(this->output, actualOutputs.at(j));
         }
         for (Layer* layer : layers) {
             layer->commitToWeights(learningRate);
@@ -175,9 +179,9 @@ double Network::computeAccuracy(const std::vector<std::vector<double>>&inputs, c
     double totalCorrect = 0.0;
 
     for (int i = 0; i < inputs.size(); i++) {
-        this->fullForwardPropagation(inputs.at(i));
+        this->fullForwardPropagation(inputs[i]);
 
-        totalCorrect += this->ownedLossFunction->getAccuracyValue(this->output, actualOutputs.at(i));
+        totalCorrect += this->ownedLossFunction->getAccuracyValue(this->output, actualOutputs[i]);
     }
 
     return totalCorrect / inputs.size();
