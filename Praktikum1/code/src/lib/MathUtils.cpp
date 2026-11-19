@@ -6,12 +6,12 @@
 namespace dnn {
 
 double dotProduct(const std::vector<double>& a, const std::vector<double>& b) {
-    if (a.size() != a.size()) {
+    if (a.size() != b.size()) {
         throw std::invalid_argument("Argument vectors have to be of the same size.");
     } 
     
     double sum = 0.0;
-    for (std::size_t i = 0; i < a.size(); i += 1) {
+    for (std::size_t i = 0; i < a.size(); i++) {
         sum += a[i] * b[i];
     }
     return sum;

@@ -60,6 +60,10 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
 }
 
 void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, const std::vector<double>& previousLayerOutput) {
+    if (activationFunction == nullptr) {
+        throw std::logic_error("no activation function");
+    }
+
     std::vector<double> dPreActivation(layerOutputSize);
     for(std::size_t i = 0; i < layerOutputSize; i++) {
         dPreActivation[i] = dActivationOutput[i] * activationFunction->activationBackwards(preActivationOutput[i]);
@@ -76,7 +80,7 @@ void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, co
 
     for(std::size_t i = 0; i < layerOutputSize; i++) {
         for(std::size_t j = 0; j < layerInputSize; j++) {
-            accumulatedDWeights[i][j] = accumulatedDWeights[i][j] + dWeights[i][j];
+            accumulatedDWeights[i][j] += dWeights[i][j];
         }
         accumulatedDBias[i] += dBias[i];
     }
@@ -84,10 +88,12 @@ void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, co
     numProcessedSamples++;
 
     dPreviousLayerOutput.assign(layerInputSize, 0.0);
-    for (std::size_t i = 0; i < layerOutputSize; i++) {
-        for (std::size_t j = 0; j < layerInputSize; j++) {
-            dPreviousLayerOutput[j] += weights[i][j] * dPreActivation[i];
+    std::vector<double> weightsColumn(layerOutputSize);
+    for (std::size_t j = 0; j < layerInputSize; j++) {
+        for (std::size_t i = 0; i < layerOutputSize; i++) {
+            weightsColumn[i] = weights[i][j];
         }
+        dPreviousLayerOutput[j] += dotProduct(weightsColumn, dPreActivation);
     }
 }
 
