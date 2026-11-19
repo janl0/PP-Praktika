@@ -31,7 +31,7 @@ double BinaryCrossEntropy::getCostValue(const std::vector<double>& predictedOutp
         const double pred = predictedOutput[i];
         const double act = actualOutput[i];
         vecP.push_back(std::log(clampProbability(pred)));
-        vecQ.push_back(1.0 - std::log(clampProbability(pred)));
+        vecQ.push_back(std::log(1.0 - clampProbability(pred)));
         vecR.push_back(1.0 - act);
     }
 
