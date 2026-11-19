@@ -52,9 +52,8 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
 
     for (size_t i = 0; i < layerOutputSize; i++) {
         double activationSum = bias[i];
-        for (size_t j = 0; j < layerInputSize; j++) {
-            activationSum += weights[i][j] * previousLayerOutput[j];
-        }
+        activationSum += dotProduct(weights[i], previousLayerOutput);
+
         preActivationOutput[i] = activationSum;
         activationOutput[i] = activationFunction->activation(activationSum);
     }
