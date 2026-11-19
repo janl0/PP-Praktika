@@ -10,7 +10,7 @@ Network::Network(std::vector<std::tuple<std::vector<std::vector<double>>, std::v
 
     for (int i = 0; i < layerParameters.size(); i++) {
         std::tuple<std::vector<std::vector<double>>, std::vector<double>, ActivationFunction*> layerParameter = layerParameters.at(i);
-        Layer layer = new Layer(i, 0, std::get<0>(layerParameter).at(0).size(), std::get<0>(layerParameter).size(), std::get<2>(layerParameter));
+        Layer layer(i, 0, std::get<0>(layerParameter).at(0).size(), std::get<0>(layerParameter).size(), std::get<2>(layerParameter));
         layer.setParameters(std::get<0>(layerParameter), std::get<1>(layerParameter));
         this->layers.push_back(layer);
     }
@@ -61,8 +61,8 @@ void Network::setLayers(std::vector<Layer*> newLayers) {
 }
 
 Network& Network::addLayer(uint64_t inputDim, uint64_t outputDim, ActivationFunction* activationFunction) {
-    Layer layer = new Layer(0, nextSeed++, inputDim, outputDim, activationFunction);
-    this->layers.push_back(*layer);
+    Layer layer(0, nextSeed++, inputDim, outputDim, activationFunction);
+    this->layers.push_back(layer);
     return *this;
 }
 
