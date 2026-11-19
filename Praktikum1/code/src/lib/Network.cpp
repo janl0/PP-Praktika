@@ -62,6 +62,7 @@ void Network::setLayers(std::vector<Layer*> newLayers) {
 
 Network& Network::addLayer(uint64_t inputDim, uint64_t outputDim, ActivationFunction* activationFunction) {
     Layer* layer = new Layer(0, nextSeed++, inputDim, outputDim, activationFunction);
+    layer->init();
     this->layers.push_back(layer);
     return *this;
 }
