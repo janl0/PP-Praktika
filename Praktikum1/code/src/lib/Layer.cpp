@@ -50,7 +50,7 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
     preActivationOutput.assign(layerOutputSize, 0.0);
     activationOutput.assign(layerOutputSize, 0.0);
 
-    for (size_t i = 0; i < layerOutputSize; i++) {
+    for (std::size_t i = 0; i < layerOutputSize; i++) {
         double activationSum = bias[i];
         activationSum += dotProduct(weights[i], previousLayerOutput);
 
@@ -61,39 +61,39 @@ void Layer::forwardPropagation(const std::vector<double>& previousLayerOutput) {
 
 void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, const std::vector<double>& previousLayerOutput) {
     std::vector<double> dPreActivation(layerOutputSize);
-    for(uint32_t i = 0; i < layerOutputSize; i++) {
+    for(std::size_t i = 0; i < layerOutputSize; i++) {
         dPreActivation[i] = dActivationOutput[i] * activationFunction->activationBackwards(preActivationOutput[i]);
     }
 
-    dWeights.assign(layerOutputSize, std::vector<double>(layerInputSize, 0.0));
-    for(uint32_t i = 0; i < layerOutputSize; i++) {
-        for(uint32_t j = 0; j < layerInputSize; j++) {
+    dWeights.assign(layerOutputSize, std::vector<double>(layerInputSize));
+    for(std::size_t i = 0; i < layerOutputSize; i++) {
+        for(std::size_t j = 0; j < layerInputSize; j++) {
             dWeights[i][j] = dPreActivation[i] * previousLayerOutput[j];
         }
     }
 
     dBias = dPreActivation;
 
-    for(uint32_t i = 0; i < layerOutputSize; i++) {
-        for(uint32_t j = 0; j < layerInputSize; j++) {
+    for(std::size_t i = 0; i < layerOutputSize; i++) {
+        for(std::size_t j = 0; j < layerInputSize; j++) {
             accumulatedDWeights[i][j] = accumulatedDWeights[i][j] + dWeights[i][j];
         }
-        accumulatedDBias[i] = accumulatedDBias[i] + dBias[i];
+        accumulatedDBias[i] += dBias[i];
     }
 
     numProcessedSamples++;
 
     dPreviousLayerOutput.assign(layerInputSize, 0.0);
-    for (size_t i = 0; i < layerOutputSize; i++) {
-        for (size_t j = 0; j < layerInputSize; j++) {
+    for (std::size_t i = 0; i < layerOutputSize; i++) {
+        for (std::size_t j = 0; j < layerInputSize; j++) {
             dPreviousLayerOutput[j] += weights[i][j] * dPreActivation[i];
         }
     }
 }
 
 void Layer::updateParameters(const std::vector<std::vector<double>>& dWeights, const std::vector<double>& dBias, double learningRate) {
-    for(uint32_t i = 0; i < layerOutputSize; i++) {
-        for(uint32_t j = 0; j < layerInputSize; j++) {
+    for(std::size_t i = 0; i < layerOutputSize; i++) {
+        for(std::size_t j = 0; j < layerInputSize; j++) {
             weights[i][j] = weights[i][j] - learningRate * dWeights[i][j];
         }
         bias[i] = bias[i] - learningRate * dBias[i];
