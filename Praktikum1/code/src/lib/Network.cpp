@@ -12,7 +12,7 @@ Network::Network(std::vector<std::tuple<std::vector<std::vector<double>>, std::v
         std::tuple<std::vector<std::vector<double>>, std::vector<double>, ActivationFunction*> layerParameter = layerParameters.at(i);
         Layer layer = new Layer(i, 0, std::get<0>(layerParameter).at(0).size(), std::get<0>(layerParameter).size(), std::get<2>(layerParameter));
         layer.setParameters(std::get<0>(layerParameter), std::get<1>(layerParameter));
-        this->layers.push_back(*layer);
+        this->layers.push_back(layer);
     }
 }
 
