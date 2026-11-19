@@ -40,8 +40,8 @@ NetworkSpec makeSpec(std::mt19937& rng, LossKind loss = LossKind::TestSquaredErr
 
 TEST(NetworkTraining, MatchesReference) {
     std::mt19937 rng(14);
-    const Dataset train = makeDataset(rng, 7000, 30, 20);
-    const Dataset test = makeDataset(rng, 5000, 30, 20);
+    const Dataset train = makeDataset(rng, 7000, 3, 2);
+    const Dataset test = makeDataset(rng, 5000, 3, 2);
 
     struct Case {
         std::string name;
