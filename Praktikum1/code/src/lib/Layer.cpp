@@ -102,6 +102,10 @@ void Layer::updateParameters(const std::vector<std::vector<double>>& dWeights, c
 }
 
 void Layer::commitToWeights(double learningRate) {
+    if (numProcessedSamples == 0) {
+        return;
+    }
+    
     for (auto& row : accumulatedDWeights)
         for (double& value : row)
             value = value / numProcessedSamples;
