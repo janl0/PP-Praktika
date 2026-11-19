@@ -87,7 +87,7 @@ void Layer::backwardPropagation(const std::vector<double>& dActivationOutput, co
     dPreviousLayerOutput.assign(layerInputSize, 0.0);
     for (size_t i = 0; i < layerOutputSize; i++) {
         for (size_t j = 0; j < layerInputSize; j++) {
-            dPreviousLayerOutput[j] = weights[i][j] * dPreActivation[i];
+            dPreviousLayerOutput[j] += weights[i][j] * dPreActivation[i];
         }
     }
 }
