@@ -137,12 +137,16 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
         double epochAccuracy = 0.0;
 
         for (int j = 0; j < inputs.size(); j++) {
-            this->fullForwardPropagation(inputs[j]);
 
-            epochCost += this->ownedLossFunction->getCostValue(this->output, actualOutputs[j]);
-            epochAccuracy += this->ownedLossFunction->getAccuracyValue(this->output, actualOutputs[j]);
+            std::vector<double> shortedInput(inputs[j].cbegin(), inputs[j].cbegin() + this->layers[0]->getWeights()[0].size());
+            std::vector<double> shortedOutput(actualOutputs[j].cbegin(), actualOutputs[j].cbegin() + this->layers[0]->getWeights().size());
 
-            this->fullBackwardPropagation(this->output, actualOutputs[j]);
+            this->fullForwardPropagation(shortedInput);
+
+            epochCost += this->ownedLossFunction->getCostValue(this->output, shortedOutput);
+            epochAccuracy += this->ownedLossFunction->getAccuracyValue(this->output, shortedOutput);
+
+            this->fullBackwardPropagation(this->output, shortedOutput);
 
             if (j % batchSize == 0) {
                 for (Layer* layer : layers) {
@@ -179,9 +183,13 @@ double Network::computeAccuracy(const std::vector<std::vector<double>>&inputs, c
     double totalCorrect = 0.0;
 
     for (int i = 0; i < inputs.size(); i++) {
-        this->fullForwardPropagation(inputs[i]);
 
-        totalCorrect += this->ownedLossFunction->getAccuracyValue(this->output, actualOutputs[i]);
+        std::vector<double> shortedInput(inputs[i].cbegin(), inputs[i].cbegin() + this->layers[0]->getWeights()[0].size());
+        std::vector<double> shortedOutput(actualOutputs[i].cbegin(), actualOutputs[i].cbegin() + this->layers[0]->getWeights().size());
+
+        this->fullForwardPropagation(shortedInput);
+
+        totalCorrect += this->ownedLossFunction->getAccuracyValue(this->output, shortedOutput);
     }
 
     return totalCorrect / inputs.size();
