@@ -40,8 +40,8 @@ NetworkSpec makeSpec(std::mt19937& rng, LossKind loss = LossKind::TestSquaredErr
 
 TEST(NetworkTraining, MatchesReference) {
     std::mt19937 rng(14);
-    const Dataset train = makeDataset(rng, 7000, 30, 20);
-    const Dataset test = makeDataset(rng, 5000, 30, 20);
+    const Dataset train = makeDataset(rng, 7000, 3, 2);
+    const Dataset test = makeDataset(rng, 5000, 3, 2);
 
     struct Case {
         std::string name;
@@ -51,7 +51,7 @@ TEST(NetworkTraining, MatchesReference) {
     std::vector<Case> cases;
 
     // batch sizes below, equal to and above the dataset size
-    for (const std::size_t batchSize : {1u, 2u, 3u, 7u, 10u}) {
+    for (const std::size_t batchSize : {1u, 2000u, 3000u, 7000u, 10000u}) {
         for (const int epochs : {1, 3}) {
             Case c{"batchSize " + std::to_string(batchSize) + ", " + std::to_string(epochs) + " epoch(s)", makeSpec(rng), {}};
             c.ops = {NetworkOp::trainBatch(train.inputs, train.outputs, batchSize, epochs, 0.1),
@@ -78,7 +78,7 @@ TEST(NetworkTraining, MatchesReference) {
     }
     {
         std::mt19937 bigRng(140);
-        const Dataset big = makeDataset(bigRng, 40, 3, 2);
+        const Dataset big = makeDataset(bigRng, 40000, 3, 2);
         Case c{"larger dataset, 10 epochs", makeSpec(rng), {}};
         c.ops = {NetworkOp::trainBatch(big.inputs, big.outputs, 8, 10, 0.05), NetworkOp::computeAccuracy(big.inputs, big.outputs)};
         cases.push_back(c);
