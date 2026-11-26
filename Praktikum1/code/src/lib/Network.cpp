@@ -7,6 +7,9 @@ namespace dnn {
 
 Network::Network(std::vector<std::tuple<std::vector<std::vector<double>>, std::vector<double>, ActivationFunction*>> layerParameters, LossFunction* lossFunction) {
     this->ownedLossFunction = lossFunction;
+    
+    // after this push back is O(1) without reallocation
+    this->layers.reserve(layerParameters.size());
 
     for (int i = 0; i < layerParameters.size(); i++) {
         std::tuple<std::vector<std::vector<double>>, std::vector<double>, ActivationFunction*> layerParameter = layerParameters[i];
@@ -19,7 +22,7 @@ Network::Network(std::vector<std::tuple<std::vector<std::vector<double>>, std::v
 Network::~Network() {
     delete this->ownedLossFunction;
 
-    for (Layer* layer : layers) {
+    for (Layer* layer : this->layers) {
         delete layer;
     }
 }
@@ -30,34 +33,34 @@ void Network::setLossFunction(LossFunction* lossFunction) {
 }
 
 const LossFunction* Network::getLossFunction() const {
-    return ownedLossFunction;
+    return this->ownedLossFunction;
 }
 
 const std::vector<double>& Network::getOutput() const {
-    return output;
+    return this->output;
 }
 
 const std::vector<double>& Network::getCostHistory() const {
-    return costHistory;
+    return this->costHistory;
 }
 
 const std::vector<double>& Network::getAccuracyHistory() const {
-    return accuracyHistory;
+    return this->accuracyHistory;
 }
 
 const std::vector<Layer*>& Network::getLayers() const {
-    return layers;
+    return this->layers;
 }
 
 void Network::setLayers(std::vector<Layer*> newLayers) {
-    for (Layer* layer : layers) {
+    for (Layer* layer : this->layers) {
         delete layer;
     }
-    layers = std::move(newLayers);
-    initialInput.clear();
-    output.clear();
-    costHistory.clear();
-    accuracyHistory.clear();
+    this->layers = std::move(newLayers);
+    this->initialInput.clear();
+    this->output.clear();
+    this->costHistory.clear();
+    this->accuracyHistory.clear();
 }
 
 Network& Network::addLayer(uint64_t inputDim, uint64_t outputDim, ActivationFunction* activationFunction) {
@@ -83,7 +86,7 @@ void Network::fullForwardPropagation(const std::vector<double>& input) {
         (*it)->forwardPropagation(this->getLayerInput((*it)->getId()));
     }
 
-    if (layers.size() > 0) {
+    if (this->layers.size() > 0) {
         this->output = this->layers.back()->getActivationOutput();
     }
     else {
@@ -126,7 +129,7 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
         throw std::invalid_argument("batchSize has to be positive");
     }
 
-    for (Layer* layer : layers) {
+    for (Layer* layer : this->layers) {
         layer->commitToWeights(learningRate);
     }
 
@@ -149,12 +152,12 @@ void Network::trainBatch(const std::vector<std::vector<double>>& inputs, const s
             this->fullBackwardPropagation(this->output, shortedOutput);
 
             if (j % batchSize == 0) {
-                for (Layer* layer : layers) {
+                for (Layer* layer : this->layers) {
                     layer->commitToWeights(learningRate);
                 }
             }
         }
-        for (Layer* layer : layers) {
+        for (Layer* layer : this->layers) {
             layer->commitToWeights(learningRate);
         }
 

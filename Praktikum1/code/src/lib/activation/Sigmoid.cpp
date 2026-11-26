@@ -9,7 +9,7 @@ double Sigmoid::activation(double x) {
 }
 
 double Sigmoid::activationBackwards(double x) {
-	return activation(x) * (1 - activation(x));
+	return this->activation(x) * (1 - this->activation(x));
 }
 
 std::string Sigmoid::getName() const {
