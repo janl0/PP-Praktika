@@ -1,0 +1,4 @@
+Our group didn't use AI for code generation or AI-assisted code completions.
+We relied solely on standard LSP completions for writing code. 
+We used AI only to analyze the test logs and identify what kind of errors occured.
+The code fixes themselves where not completed with AI assistance.
